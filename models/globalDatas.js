@@ -10,8 +10,6 @@ const client = new DynamoDBClient({
 import { CreateTableCommand, waitUntilTableExists } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, ScanCommand, PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 
-
-
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
 async function createTable() {
@@ -26,6 +24,8 @@ async function createTable() {
     ],
       BillingMode: "PAY_PER_REQUEST"
     }));
+    
+    await waitUntilTableExists({ client, maxWaitTime: 20 }, { TableName: "GlobalDatas" });
     console.log("Table GlobalDatas created");
   } catch (err) {
     if (err.name === "ResourceInUseException") {
