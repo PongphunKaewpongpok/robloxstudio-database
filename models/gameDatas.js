@@ -56,7 +56,7 @@ async function createTable() {
       ],
       BillingMode: "PAY_PER_REQUEST"
     }));
-    await waitUntilTableExists({ client, minDelay: 5, maxWaitTime: 20 }, { TableName: "GameDatas" });
+    await waitUntilTableExists({ client, minDelay: 5, maxWaitTime: 300 }, { TableName: "GameDatas" });
     console.log("Table GameDatas created");
   } catch (err) {
     if (err.name === "ResourceInUseException") {
