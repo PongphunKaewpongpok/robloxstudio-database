@@ -24,7 +24,7 @@ const client = new DynamoDBClient({
 
 
 
-import { CreateTableCommand } from "@aws-sdk/client-dynamodb";
+import { CreateTableCommand, waitUntilTableExists } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, ScanCommand, PutCommand, QueryCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 
 
