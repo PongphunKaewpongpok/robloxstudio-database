@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="/css/dashboard/logs.css">
+
+<div class="container">
+  <h1>Logs</h1>
+
+  <form id="log-filter-form" class="filter-form">
+    <label for="start-date">From Date:</label>
+    <input type="date" id="start-date" name="startDate" value="<%= startDate || '' %>">
+
+    <label for="end-date">To Date:</label>
+    <input type="date" id="end-date" name="endDate" value="<%= endDate || '' %>">
+
+    <label for="log-type">Data Type:</label>
+    <select id="log-type" name="logType">
+      <option value="">All</option>
+      <% logTypes.forEach(type => { %>
+        <option value="<%= type %>" <%= (type === logType) ? 'selected' : '' %>><%= type %></option>
+      <% }) %>
+    </select>
+
+    <label for="player-id">Player:</label>
+    <input type="text" id="player-id" name="playerId" placeholder="Username of ID" value="<%= playerId || '' %>">
+  </form>
+
+  <table id="log-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Data Type</th>
+        <th>Username (ID)</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (logs && logs.length > 0) { %>
+        <% logs.forEach(log => { %>
+          <tr>
+            <td><%= log.date %></td>
+            <td><%= log.time %></td>
+            <td><%= log.type %></td>
+            <td><%= log.username ?? '-' %> (<%= log.playerId ?? '-' %>)</td>
+            <td><%= log.message %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5">No Log</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const form = document.getElementById('log-filter-form');
+['start-date','end-date','log-type','player-id'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    const logType = document.getElementById('log-type').value;
+    const playerId = document.getElementById('player-id').value;
+
+    let query = '?';
+    if(startDate) query += `startDate=${startDate}&`;
+    if(endDate) query += `endDate=${endDate}&`;
+    if(logType) query += `logType=${logType}&`;
+    if(playerId) query += `playerId=${playerId}&`;
+
+    window.location.href = '/dashboard/logs' + query;
+  });
+});
+</script>

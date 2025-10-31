@@ -1,0 +1,141 @@
+<link rel="stylesheet" href="/css/dashboard/analytics.css">
+
+<div class="analytics-container">
+  <div class="filters">
+    <label>Range:</label>
+    <select id="rangeSelect">
+      <option value="day">Day</option>
+      <option value="month">Month</option>
+      <option value="year">Year</option>
+    </select>
+
+    <label>Username or ID:</label>
+    <input type="text" id="playerInput" placeholder="Username or ID">
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-card">
+      <h3>All Logs (Line Chart)</h3>
+      <canvas id="logChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>Player Logs (Bar Chart)</h3>
+      <canvas id="playerChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const logs = <%- JSON.stringify(logs) %>;
+const logTypes = <%- JSON.stringify(logTypes) %>;
+const player_data = <%- JSON.stringify(player_data) %>;
+
+let range = 'day';
+let filterText = '';
+
+function getColorForIndex(index, total) {
+  const hue = Math.floor((index / total) * 360);
+  return `hsl(${hue}, 70%, 50%)`;
+}
+
+function mapDate(dateStr, range) {
+  const d = new Date(dateStr);
+  if (range === 'day') return dateStr;
+  if (range === 'month') return `${d.getFullYear()}-${d.getMonth() + 1}`;
+  if (range === 'year') return `${d.getFullYear()}`;
+  return dateStr;
+}
+
+function computeChartData(logs, logTypes, range) {
+  const logGroups = {};
+
+  logs.forEach(log => {
+    const label = mapDate(log.date, range);
+    if (!logGroups[label]) logGroups[label] = {};
+    logGroups[label][log.type] = (logGroups[label][log.type] || 0) + 1;
+  });
+
+  const labels = Object.keys(logGroups).sort();
+  const datasets = logTypes.map((type, index) => {
+    const color = getColorForIndex(index, logTypes.length);
+    return {
+      label: type,
+      data: labels.map(l => logGroups[l][type] || 0),
+      borderColor: color,
+      backgroundColor: color,
+      fill: false,
+      tension: 0.3,
+      minBarLength: 5,
+    };
+  });
+
+  return { labels, datasets };
+}
+
+function filterLogs(logs, text) {
+  if (!text.trim()) return logs;
+  return logs.filter(l => {
+    const pid = l.UserId ?? l.id ?? l._id;
+    return (
+      (pid && pid.toString().includes(text)) ||
+      (l.username && l.username.toLowerCase().includes(text.toLowerCase()))
+    );
+  });
+}
+
+const logCtx = document.getElementById('logChart').getContext('2d');
+const playerCtx = document.getElementById('playerChart').getContext('2d');
+
+let logChart = new Chart(logCtx, {
+  type: 'line',
+  data: computeChartData(logs, logTypes, range),
+  options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+});
+
+let playerChart = new Chart(playerCtx, {
+  type: 'bar',
+  data: { labels: [], datasets: [] },
+  options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+});
+
+function updateCharts() {
+  const filterTextLower = filterText.trim().toLowerCase();
+
+  const allData = computeChartData(logs, logTypes, range);
+  logChart.data = allData;
+  logChart.update();
+
+  const matchedPlayer = player_data.find(p => {
+    const pid = p.UserId;
+    return (
+      (p.username && p.username.toLowerCase() === filterTextLower) ||
+      (pid && pid.toString() === filterText)
+    );
+  });
+
+  if (matchedPlayer) {
+    const playerLogs = logs.filter(l => l.playerId === matchedPlayer.UserId);
+    const playerChartData = computeChartData(playerLogs, logTypes, range);
+    playerChart.data = playerChartData;
+  } else {
+    playerChart.data = { labels: [], datasets: [] };
+  }
+
+  playerChart.update();
+}
+
+
+document.getElementById('rangeSelect').addEventListener('change', e => {
+  range = e.target.value;
+  updateCharts();
+});
+
+document.getElementById('playerInput').addEventListener('change', e => {
+  filterText = e.target.value.trim();
+  updateCharts();
+});
+
+updateCharts();
+</script>

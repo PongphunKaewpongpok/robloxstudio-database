@@ -1,0 +1,21 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="/images/logo.png" alt="Logo" class="logo-sidebar">
+        <h2>Services</h2>
+    </div>
+    <ul class="menu-list">
+        <li class="<%= page === 'player' ? 'active' : '' %>">
+            <a href="/dashboard/player">Player Data Editor</a>
+        </li>
+        <li class="<%= page === 'analytics' ? 'active' : '' %>">
+            <a href="/dashboard/analytics">Analytics</a>
+        </li>
+        <li class="<%= page === 'settings' ? 'active' : '' %>">
+            <a href="/dashboard/settings">Settings</a>
+        </li>
+        <li class="<%= page === 'logs' ? 'active' : '' %>">
+            <a href="/dashboard/logs">Logs</a>
+        </li>
+    </ul>
+    <button id="logout-btn" class="logout-btn">Logout</button>
+</div>

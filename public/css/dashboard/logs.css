@@ -1,0 +1,55 @@
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: flex-end;
+  background-color: #333;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.filter-form label {
+  font-weight: bold;
+}
+
+.filter-form input, 
+.filter-form select {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+
+#log-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #333;
+}
+
+#log-table th, #log-table td {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: left;
+}
+
+#log-table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+#log-table tr:nth-child(even) {
+  background-color: #333;
+}

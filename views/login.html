@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Roblox Data Storage Management - Login</title>
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="container">
+    <img src="/images/logo.png" alt="Logo" class="logo">
+    <div class="site-title">Roblox Data Storage Management</div>
+
+    <h2>🔑 Login</h2>
+    <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <div class="switch">
+      Don’t have an account? <a href="/register">Register</a>
+    </div>
+    <div id="login-msg" class="message"></div>
+  </div>
+  <script src="/js/Auth/login.js"></script>
+</body>
+</html>
