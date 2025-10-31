@@ -17,11 +17,7 @@ async function getRobloxUsername(userId) {
 
 const client = new DynamoDBClient({
   endpoint: process.env.DYNAMODB_ENDPOINT,
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: "dummy",
-    secretAccessKey: "dummy"
-  }
+  region: process.env.AWS_REGION
 });
 
 
