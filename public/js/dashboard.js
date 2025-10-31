@@ -164,16 +164,30 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  
+  function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      alert('Token copied!');
+    } catch (err) {
+      alert('Failed to copy token. Please copy manually.');
+    }
+    document.body.removeChild(textArea);
+  }
+
 
   if (copyBtn && tokenInput) {
-    copyBtn.onclick = async () => {
-      try {
-        await navigator.clipboard.writeText(tokenInput.value);
-        alert("Token copied!");
-      } catch (err) {
-        console.error("Failed to copy token:", err);
-        alert("Failed to copy token. Please try manually.");
+    copyBtn.onclick = () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(tokenInput.value)
+          .then(() => alert("Token copied!"))
+          .catch(() => fallbackCopyTextToClipboard(tokenInput.value));
+      } else {
+        fallbackCopyTextToClipboard(tokenInput.value);
       }
     };
   }
